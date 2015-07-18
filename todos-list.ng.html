@@ -29,7 +29,7 @@
         {{task.private == true ? "Private" : "Public"}}
       </button>
 
-      <span class="text"><strong>{{task.username}}</strong> : {{task.text}} <small>{{task.createdAt | date: 'MM/dd/yy @ HH:mm:ss'}}</small></span>
+      <span class="text"><strong>{{task.username}}</strong> : {{task.text}} <small am-time-ago="task.createdAt" ng-attr-title="{{task.createdAt | date: 'MM/dd/yy @ HH:mm:ss'}}"></small></span>
     </li>
   </ul>
 </div>

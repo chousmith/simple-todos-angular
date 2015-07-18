@@ -9,10 +9,10 @@ Tasks = new Mongo.Collection("tasks");
 
 if (Meteor.isClient) {
 	// only runs on client side
-	angular.module("todos", ['angular-meteor']);
+	angular.module("todos", ['angular-meteor', 'angularMoment']);
 
-	angular.module("todos").controller("TodosListCtrl", ['$scope', '$meteor',
-	function ( $scope, $meteor ) {
+	angular.module("todos").controller("TodosListCtrl", ['$scope', '$window', '$meteor',
+	function ( $scope, $window, $meteor ) {
     $scope.$meteorSubscribe("tasks");
     
     /*
@@ -56,6 +56,25 @@ if (Meteor.isClient) {
     $scope.incompleteCount = function () {
       return Tasks.find({ checked: {$ne: true} }).count();
     };
+    
+    // a little moment.js fromNow formatting cleanup
+    $window.moment.locale('en', {
+      relativeTime : {
+        future: 'in %s',
+        past: '%s ago',
+        s: '%ds',
+        m: '1m',
+        mm: '%dm',
+        h: '1h',
+        hh: '%dh',
+        d: '1d',
+        dd: '%dd',
+        M: '1 month',
+        MM: '%d months',
+        y: '1 year',
+        yy: '%d years'
+      }
+    });
 	}]);
   
   // At the bottom of the client code

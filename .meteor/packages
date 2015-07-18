@@ -8,3 +8,5 @@ meteor-platform
 urigo:angular
 accounts-ui
 accounts-password
+momentjs:moment
+tonekk:angular-moment
