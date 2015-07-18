@@ -2,7 +2,7 @@
  * todos-angular Meteor app
  * originally based off the https://www.meteor.com/tutorials/angular/creating-an-app
  *
- * v1.1.1
+ * v1.1.2
  */
 
 Tasks = new Mongo.Collection("tasks");
@@ -14,7 +14,13 @@ if (Meteor.isClient) {
 	function ( $scope, $window, $meteor ) {
     $scope.$meteorSubscribe("tasks");
     
+    // set default initial hideCompleted & query
+    $scope.hideCompleted = false;
+    $scope.query = {};
+    
+    // watch hideCompleted for changes from the angular side
     $scope.$watch('hideCompleted', function() {
+      //console.log( 'hideCompleted = '+ ( $scope.hideCompleted ? 'true' : 'false' ) );
       if ($scope.hideCompleted)
         $scope.query = {checked: {$ne: true}};
       else
