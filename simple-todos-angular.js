@@ -1,0 +1,118 @@
+Tasks = new Mongo.Collection("tasks");
+
+if (Meteor.isClient) {
+	// only runs on client side
+	angular.module("simple-todos", ['angular-meteor']);
+
+	angular.module("simple-todos").controller("TodosListCtrl", ['$scope', '$meteor',
+	function ( $scope, $meteor ) {
+    $scope.$meteorSubscribe("tasks");
+    
+    /*
+    $scope.tasks = [
+      { text: "This is task 1" },
+      { text: "This task 2" },
+      { text: "Task 3 is here" },
+    ];
+    */
+    
+    $scope.$watch('hideCompleted', function() {
+      if ($scope.hideCompleted)
+        $scope.query = {checked: {$ne: true}};
+      else
+        $scope.query = {};
+    });
+    
+    $scope.tasks = $meteor.collection(function() {
+      // actually here just sort tasks by newest first
+      return Tasks.find( $scope.getReactively('query'), { sort: { createdAt: -1 } })
+    });
+    
+    $scope.addTask = function(newTask) {
+      $meteor.call("addTask", newTask);
+    };
+    
+    $scope.deleteTask = function(task) {
+      $meteor.call("deleteTask", task._id);
+    };
+    
+    $scope.setChecked = function(task) {
+      $meteor.call("setChecked", task._id, !task.checked);
+    };
+    
+    // Add a setPrivate scope function
+    $scope.setPrivate = function(task) {
+      $meteor.call("setPrivate", task._id, ! task.private);
+    };
+    
+    // Add to scope
+    $scope.incompleteCount = function () {
+      return Tasks.find({ checked: {$ne: true} }).count();
+    };
+	}]);
+  
+  // At the bottom of the client code
+  Accounts.ui.config({
+    passwordSignupFields: "USERNAME_ONLY"
+  });
+}
+
+// At the bottom of simple-todos.js, outside of the client-only block
+Meteor.methods({
+  addTask: function (text) {
+    // Make sure the user is logged in before inserting a task
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+
+    Tasks.insert({
+      text: text,
+      createdAt: new Date(),
+      owner: Meteor.userId(),
+      username: Meteor.user().username
+    });
+    
+    console.log('new Task : '+ Meteor.user().username +' : '+ text );
+  },
+  deleteTask: function (taskId) {
+    var task = Tasks.findOne(taskId);
+    if (task.private && task.owner !== Meteor.userId()) {
+      // If the task is private, make sure only the owner can delete it
+      throw new Meteor.Error("not-authorized");
+    } // else
+    Tasks.remove(taskId);
+  },
+  setChecked: function (taskId, setChecked) {
+    console.log( ( setChecked ? '' : 'un-' ) + 'completed task '+ taskId );
+    var task = Tasks.findOne(taskId);
+    if (task.private && task.owner !== Meteor.userId()) {
+      // If the task is private, make sure only the owner can check it off
+      throw new Meteor.Error("not-authorized");
+    }
+    Tasks.update(taskId, { $set: { checked: setChecked} });
+  },
+  setPrivate: function (taskId, setToPrivate) {
+    var task = Tasks.findOne(taskId);
+
+    // Make sure only the task owner can make a task private
+    if (task.owner !== Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+
+    Tasks.update(taskId, { $set: { private: setToPrivate } });
+  }
+});
+
+if (Meteor.isServer) {
+  Meteor.startup(function () {
+    // code to run on server at startup
+  });
+  Meteor.publish("tasks", function () {
+    return Tasks.find({
+      $or: [
+        { private: {$ne: true} },
+        { owner: this.userId }
+      ]
+    });
+  });
+}
