@@ -1,8 +1,8 @@
 /* CSS declarations go here */
 body {
   font-family: sans-serif;
-  background-color: #315481;
-  background-image: linear-gradient(to bottom, #315481, #918e82 100%);
+  background-color: #eee;
+  background-image: linear-gradient(to bottom, #ddd, #eee 100%);
   background-attachment: fixed;
 
   position: absolute;
@@ -21,12 +21,12 @@ body {
   max-width: 600px;
   margin: 0 auto;
   min-height: 100%;
-  background: white;
+  background: #fff;
 }
 
 header {
-  background: #d2edf4;
-  background-image: linear-gradient(to bottom, #d0edf5, #e1e5f0 100%);
+  background: #eee;
+  /*background-image: linear-gradient(to bottom, #e0e0e0, #eee 100%);*/
   padding: 20px 15px 15px 15px;
   position: relative;
 }

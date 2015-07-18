@@ -2,26 +2,17 @@
  * todos-angular Meteor app
  * originally based off the https://www.meteor.com/tutorials/angular/creating-an-app
  *
- * v1.0.1
+ * v1.1.1
  */
 
 Tasks = new Mongo.Collection("tasks");
 
 if (Meteor.isClient) {
-	// only runs on client side
 	angular.module("todos", ['angular-meteor', 'angularMoment']);
 
 	angular.module("todos").controller("TodosListCtrl", ['$scope', '$window', '$meteor',
 	function ( $scope, $window, $meteor ) {
     $scope.$meteorSubscribe("tasks");
-    
-    /*
-    $scope.tasks = [
-      { text: "This is task 1" },
-      { text: "This task 2" },
-      { text: "Task 3 is here" },
-    ];
-    */
     
     $scope.$watch('hideCompleted', function() {
       if ($scope.hideCompleted)
@@ -47,12 +38,10 @@ if (Meteor.isClient) {
       $meteor.call("setChecked", task._id, !task.checked);
     };
     
-    // Add a setPrivate scope function
     $scope.setPrivate = function(task) {
       $meteor.call("setPrivate", task._id, ! task.private);
     };
     
-    // Add to scope
     $scope.incompleteCount = function () {
       return Tasks.find({ checked: {$ne: true} }).count();
     };
@@ -82,7 +71,7 @@ if (Meteor.isClient) {
     passwordSignupFields: "USERNAME_ONLY"
   });
 }
-
+// general Meteor.methods for the client & server
 Meteor.methods({
   addTask: function (text) {
     // Make sure the user is logged in before inserting a task
@@ -119,7 +108,7 @@ Meteor.methods({
   setPrivate: function (taskId, setToPrivate) {
     var task = Tasks.findOne(taskId);
 
-    // Make sure only the task owner can make a task private
+    // Make sure only the task owner can make a task private?
     if (task.owner !== Meteor.userId()) {
       throw new Meteor.Error("not-authorized");
     }
@@ -130,7 +119,8 @@ Meteor.methods({
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
-    // code to run on server at startup
+    // code to run on server at startup?
+    console.log('and then?');
   });
   Meteor.publish("tasks", function () {
     return Tasks.find({
