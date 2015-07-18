@@ -1,10 +1,17 @@
+/**
+ * todos-angular Meteor app
+ * originally based off the https://www.meteor.com/tutorials/angular/creating-an-app
+ *
+ * v1.0.1
+ */
+
 Tasks = new Mongo.Collection("tasks");
 
 if (Meteor.isClient) {
 	// only runs on client side
-	angular.module("simple-todos", ['angular-meteor']);
+	angular.module("todos", ['angular-meteor']);
 
-	angular.module("simple-todos").controller("TodosListCtrl", ['$scope', '$meteor',
+	angular.module("todos").controller("TodosListCtrl", ['$scope', '$meteor',
 	function ( $scope, $meteor ) {
     $scope.$meteorSubscribe("tasks");
     
@@ -57,7 +64,6 @@ if (Meteor.isClient) {
   });
 }
 
-// At the bottom of simple-todos.js, outside of the client-only block
 Meteor.methods({
   addTask: function (text) {
     // Make sure the user is logged in before inserting a task

@@ -21,3 +21,7 @@ oh and if you are not wanting it any more there there you can
 * google maps?!
 * and then?
 
+## changelog
+
+* 1.0.1 renaming core files a lil bit
+* 1.0 initial deploy
