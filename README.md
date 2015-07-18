@@ -11,17 +11,9 @@ To push this to the clouds, like chousmithtodos.meteor.com , just
 
 ok well not that one because i think i already did
 
-oh and you can meteor deploy --delete ... if you are not wanting it any more ther
+oh and if you are not wanting it any more there there you can 
 
-`meteor`
-
-To push this to the clouds, like chousmithtodos.meteor.com , just
-
-`meteor deploy chousmithtods.meteor.com`
-
-ok well not that one because i think i already did
-
-oh and you can meteor deploy --delete ... if you are not wanting it any more there. maybe
+`meteor deploy --delete whateveryournamewas.meteor.com`
 
 ## todos for todos
 
